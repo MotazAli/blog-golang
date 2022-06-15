@@ -1,22 +1,13 @@
 package services
 
 import (
-	//"blog/configs"
+	
 	"blog/interfaces"
 	"blog/models"
+    "blog/utilities"
 	"time"
 
-	//"blog/responses"
-	//"context"
-	//"net/http"
-	//"time"
-
-	//"github.com/gin-gonic/gin"
-	//"go.mongodb.org/mongo-driver/bson"
-	//"github.com/go-playground/validator"
-	"github.com/go-playground/validator"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	//"go.mongodb.org/mongo-driver/mongo"
 )
 
 
@@ -28,7 +19,7 @@ type UsersService struct{
 //var userCollection *mongo.Collection = configs.GetCollection(configs.DB,"users")
 //var validate = validator.New()
 
-var validate = validator.New()
+
 
 func (u UsersService ) GetAllUsers()([]models.User,error){	
         return u.Repository.FindAllUsers()
@@ -47,7 +38,7 @@ func (u UsersService) GetUserById(id string) (*models.User,error){
 func (u UsersService ) CreateUser(newUser *models.User) (*models.User,error){
 
     //validate required fields
-    if validationErr := validate.Struct(newUser); validationErr != nil {
+    if validationErr := utilities.Validate.Struct(newUser); validationErr != nil {
         return nil,validationErr
     }
 
@@ -67,7 +58,7 @@ func (u UsersService ) CreateUser(newUser *models.User) (*models.User,error){
 func (u UsersService ) EditUser(id string, editUser *models.User)(*models.User,error){
     
     //validate required fields
-    if validationErr := validate.Struct(editUser); validationErr != nil {
+    if validationErr := utilities.Validate.Struct(editUser); validationErr != nil {
         return nil,validationErr
     }
 

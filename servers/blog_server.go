@@ -31,6 +31,9 @@ func BlogServerRun(){
 	{
 		usersRouterGroup := v1.Group("/users")
 		routers.UsersRoute(usersRouterGroup,DB) // users router
+
+		postsRouterGroup := v1.Group("/posts")
+		routers.PostsRoute(postsRouterGroup,DB) // posts router
 	}
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
