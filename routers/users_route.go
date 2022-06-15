@@ -9,10 +9,10 @@ import (
 
 
 func UsersRoute(router *gin.RouterGroup,DB *mongo.Client){
-	userController := controllers.CreateUsersController(DB)
-	router.GET("",userController.GetAllUsers())
-	router.GET(":id",userController.GetUserById())
-	router.POST("", userController.CreateUser())
-	router.PUT(":id", userController.UpdateUserById())
-	router.DELETE(":id",userController.DeleteUserById())
+	usersController := controllers.CreateUsersController(DB)
+	router.GET("",usersController.GetAllUsers())
+	router.GET(":id",usersController.GetUserById())
+	router.POST("", usersController.CreateUser())
+	router.PUT(":id", usersController.UpdateUserById())
+	router.DELETE(":id",usersController.DeleteUserById())
 }

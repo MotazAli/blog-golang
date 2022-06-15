@@ -15,8 +15,12 @@ type Comment struct {
 	UpdatedAt time.Time          `json:"updated_at"`
 }
 
-type CommentRequest struct {
+type CommentCreateRequest struct {
 	Body    string `json:"body,omitempty" validate:"required"`
 	UserId  string `json:"user_id,omitempty" validate:"required"`
 	PostId  string `json:"post_id,omitempty" validate:"required"`
+}
+
+type CommentUpdateRequest struct {
+	Body    string `json:"body,omitempty" validate:"required"`
 }

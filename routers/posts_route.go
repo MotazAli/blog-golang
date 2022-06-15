@@ -9,10 +9,10 @@ import (
 
 
 func PostsRoute(router *gin.RouterGroup,DB *mongo.Client){
-	postController := controllers.CreatePostsController(DB)
-	router.GET("",postController.GetAllPosts())
-	router.GET(":id",postController.GetPostById())
-	router.POST("", postController.CreatePost())
-	router.PUT(":id", postController.UpdatePostById())
-	router.DELETE(":id",postController.DeletePostById())
+	postsController := controllers.CreatePostsController(DB)
+	router.GET("",postsController.GetAllPosts())
+	router.GET(":id",postsController.GetPostById())
+	router.POST("", postsController.CreatePost())
+	router.PUT(":id", postsController.UpdatePostById())
+	router.DELETE(":id",postsController.DeletePostById())
 }
