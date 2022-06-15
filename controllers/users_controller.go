@@ -224,7 +224,7 @@ func (controller UsersController) UpdateUserById() gin.HandlerFunc{
             return
         }
 
-        c.JSON(http.StatusOK, responses.Response{Status: http.StatusCreated, Message: "success", Result: map[string]interface{}{"data": result}})
+        c.JSON(http.StatusOK, responses.Response{Status: http.StatusOK, Message: "success", Result: map[string]interface{}{"data": result}})
 	}
 }
 

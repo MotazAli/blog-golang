@@ -30,7 +30,7 @@ func (p PostsService) GetPostById(id string) (*models.Post,error){
     return p.Repository.FindOnePostById(id)
 }
 
-func (p PostsService ) CreatePost(newPost *models.PostRequest) (*models.Post,error){
+func (p PostsService ) CreatePost(newPost *models.PostCreateRequest) (*models.Post,error){
 
     //validate required fields
     if validationErr := utilities.Validate.Struct(newPost); validationErr != nil {
@@ -51,7 +51,7 @@ func (p PostsService ) CreatePost(newPost *models.PostRequest) (*models.Post,err
 }
 
 
-func (p PostsService ) EditPost(id string, editPost *models.PostRequest)(*models.Post,error){
+func (p PostsService ) EditPost(id string, editPost *models.PostUpdateRequest)(*models.Post,error){
     
     //validate required fields
     if validationErr := utilities.Validate.Struct(editPost); validationErr != nil {

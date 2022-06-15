@@ -19,7 +19,7 @@ type IPostsService interface {
 	GetAllPosts() ([]models.Post,error)
 	GetAllPostsPaging(page int, size int) ([]models.Post,error)
 	GetPostById(id string) (*models.Post,error)
-	CreatePost(newPost *models.PostRequest) (*models.Post,error)
-	EditPost(id string, editPost *models.PostRequest)(*models.Post,error)
+	CreatePost(newPost *models.PostCreateRequest) (*models.Post,error)
+	EditPost(id string, editPost *models.PostUpdateRequest)(*models.Post,error)
 	RemovePostById(id string) (*models.Post,error)
 }

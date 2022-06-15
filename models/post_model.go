@@ -15,8 +15,13 @@ type Post struct {
 	UpdatedAt time.Time          `json:"updated_at"`
 }
 
-type PostRequest struct {
+type PostCreateRequest struct {
 	Title  string `json:"title,omitempty" validate:"required"`
 	Body   string `json:"body,omitempty" validate:"required"`
 	UserId string `json:"user_id,omitempty" validate:"required"`
+}
+
+type PostUpdateRequest struct {
+	Title  string `json:"title,omitempty" validate:"required"`
+	Body   string `json:"body,omitempty" validate:"required"`
 }

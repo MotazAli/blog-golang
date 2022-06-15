@@ -30,14 +30,14 @@ type PostsController struct{
 // @Tags         posts
 // @Accept       json
 // @Produce      json
-// @Param        post  body     models.PostRequest  true  "Add post"
+// @Param        post  body     models.PostCreateRequest  true  "Add post"
 // @Success      201  {object}  responses.Response{data=models.Post}
 // @Failure      400  {object}  responses.Response
 // @Failure      500  {object}  responses.Response
 // @Router       /posts [post]
 func (controller PostsController) CreatePost() gin.HandlerFunc{
 	return func(c *gin.Context) {
-		var post models.PostRequest
+		var post models.PostCreateRequest
         if err := c.BindJSON(&post); err != nil {
             c.JSON(http.StatusBadRequest, responses.Response{Status: http.StatusBadRequest, Message: "error", Result: map[string]interface{}{"data": err.Error()}})
             return
@@ -155,7 +155,7 @@ func (controller PostsController) DeletePostById() gin.HandlerFunc{
 // @Accept       json
 // @Produce      json
 // @Param        id   path      string  true  "Post ID"
-// @Param        post  body      models.PostRequest  true  "Update post"
+// @Param        post  body      models.PostUpdateRequest  true  "Update post"
 // @Success      200  {object}  responses.Response{data=models.Post}
 // @Failure      400  {object}  responses.Response
 // @Failure      500  {object}  responses.Response
@@ -163,7 +163,7 @@ func (controller PostsController) DeletePostById() gin.HandlerFunc{
 func (controller PostsController) UpdatePostById() gin.HandlerFunc{
 	return func(c *gin.Context) {
         postId := c.Param("id")
-		var post models.PostRequest
+		var post models.PostUpdateRequest
 		
         if err := c.BindJSON(&post); err != nil {
             c.JSON(http.StatusBadRequest, responses.Response{Status: http.StatusBadRequest, Message: "error", Result: map[string]interface{}{"data": err.Error()}})
@@ -176,7 +176,7 @@ func (controller PostsController) UpdatePostById() gin.HandlerFunc{
             return
         }
 
-        c.JSON(http.StatusOK, responses.Response{Status: http.StatusCreated, Message: "success", Result: map[string]interface{}{"data": result}})
+        c.JSON(http.StatusOK, responses.Response{Status: http.StatusOK, Message: "success", Result: map[string]interface{}{"data": result}})
 	}
 }
 
