@@ -181,11 +181,20 @@ func (controller CommentsController) UpdateCommentById() gin.HandlerFunc{
 }
 
 
+var commentsService *services.CommentsService = nil
+func GetCommentsService(DB *mongo.Client) *services.CommentsService{
+    if commentsService == nil{
+        commentsRepository := repositories.CommentsRepository{DB:DB}
+        postsService := GetPostsService(DB)
+        usersService := GetUsersService(DB)
+        commentsService = &services.CommentsService{Repository:commentsRepository,PostsService:postsService,UsersService: usersService }
+    }
+    return commentsService 
+}
+
 
 func CreateCommentsController(DB *mongo.Client) *CommentsController{
-
-    commentsRepository := repositories.CommentsRepository{DB:DB}
-    commentsService := services.CommentsService{Repository:commentsRepository}
-    return &CommentsController{Service:commentsService} 
+    commentsServiceObj := GetCommentsService(DB)
+    return &CommentsController{Service:commentsServiceObj} 
 } 
 

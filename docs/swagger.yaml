@@ -8,15 +8,15 @@ definitions:
       id:
         type: string
       post_id:
-        type: string
+        $ref: '#/definitions/models.PostLight'
       updated_at:
         type: string
-      user_id:
-        type: string
+      user:
+        $ref: '#/definitions/models.UserLight'
     required:
     - body
     - post_id
-    - user_id
+    - user
     type: object
   models.CommentCreateRequest:
     properties:
@@ -31,6 +31,18 @@ definitions:
     - post_id
     - user_id
     type: object
+  models.CommentLight:
+    properties:
+      body:
+        type: string
+      id:
+        type: string
+      user:
+        $ref: '#/definitions/models.UserLight'
+    required:
+    - body
+    - user
+    type: object
   models.CommentUpdateRequest:
     properties:
       body:
@@ -42,6 +54,10 @@ definitions:
     properties:
       body:
         type: string
+      comments:
+        items:
+          $ref: '#/definitions/models.CommentLight'
+        type: array
       created_at:
         type: string
       id:
@@ -50,12 +66,11 @@ definitions:
         type: string
       updated_at:
         type: string
-      user_id:
-        type: string
+      user:
+        $ref: '#/definitions/models.UserLight'
     required:
     - body
     - title
-    - user_id
     type: object
   models.PostCreateRequest:
     properties:
@@ -69,6 +84,40 @@ definitions:
     - body
     - title
     - user_id
+    type: object
+  models.PostLight:
+    properties:
+      body:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/models.UserLight'
+    required:
+    - body
+    - title
+    type: object
+  models.PostMinimal:
+    properties:
+      body:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - body
+    - title
     type: object
   models.PostUpdateRequest:
     properties:
@@ -92,12 +141,32 @@ definitions:
         type: string
       password:
         type: string
+      posts:
+        items:
+          $ref: '#/definitions/models.PostMinimal'
+        type: array
       updated_at:
         type: string
     required:
     - email
     - name
     - password
+    type: object
+  models.UserLight:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - email
+    - name
     type: object
   responses.Response:
     properties:
@@ -283,7 +352,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/models.Post'
+                    $ref: '#/definitions/models.PostLight'
                   type: array
               type: object
         "400":
@@ -462,7 +531,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/models.User'
+                    $ref: '#/definitions/models.UserLight'
                   type: array
               type: object
         "400":
@@ -479,7 +548,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: create user account
+      description: create new user
       parameters:
       - description: Add user
         in: body
@@ -507,7 +576,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/responses.Response'
-      summary: create user account
+      summary: create new user
       tags:
       - users
   /users/{id}:

@@ -12,6 +12,8 @@ import (
 
 type CommentsService struct{
     Repository interfaces.ICommentsRepository
+    PostsService interfaces.IPostsService
+    UsersService interfaces.IUsersService
 }
 
 
@@ -37,18 +39,58 @@ func (c CommentsService ) CreateComment(newComment *models.CommentCreateRequest)
         return nil,validationErr
     }
 
-	userId, _ := primitive.ObjectIDFromHex(newComment.UserId)
-	postId, _ := primitive.ObjectIDFromHex(newComment.PostId)
+
+    user,err := c.UsersService.GetUserById(newComment.UserId)
+    if err != nil {
+        return nil,err
+    }
+    
+    post,err := c.PostsService.GetPostById(newComment.PostId)
+    if err != nil {
+        return nil,err
+    }
+
+    userlight := models.UserLight{
+        Id: user.Id,
+        Name: user.Name,
+        Email: user.Email,
+    }
+
+    postlight := models.PostLight{
+        Id: post.Id,
+        Title: post.Title,
+        Body: post.Body,
+        User:  models.UserLight{
+            Id: post.User.Id,
+            Name: post.User.Name,
+            Email: post.User.Email,
+        } ,
+    }
+
     nowTime := time.Now() 
     comment := models.Comment{
         Id:primitive.NewObjectID(),
         Body: newComment.Body,
-        UserId:userId,
-		PostId: postId,
+        User:userlight,
+		Post: postlight,
         CreatedAt: nowTime,
         UpdatedAt: nowTime,
     }
-    return c.Repository.InsertComment(&comment)
+    result,err := c.Repository.InsertComment(&comment)
+    if err != nil {
+        return nil,err
+    }
+
+    commentLight := models.CommentLight{
+        Id: comment.Id,
+        Body: comment.Body,
+        User: comment.User,
+    }
+    _,err = c.PostsService.CreatePostCommentByPostId(newComment.PostId,&commentLight)
+    if err != nil {
+        return nil,err
+    }
+    return result,nil
 }
 
 
@@ -67,7 +109,22 @@ func (c CommentsService ) EditComment(id string, editComment *models.CommentUpda
     
     comment.Body = editComment.Body
     comment.UpdatedAt = time.Now()
-    return  c.Repository.UpdateComment(id,comment)
+
+    result,err := c.Repository.UpdateComment(id,comment)
+    if err != nil {
+        return nil,err
+    }
+
+    commentLight := models.CommentLight{
+        Id: comment.Id,
+        Body: comment.Body,
+        User: comment.User,
+    }
+    _,err = c.PostsService.EditPostCommentByPostId(string(comment.Post.Id.Hex()),&commentLight)
+    if err != nil {
+        return nil,err
+    }
+    return result,nil
 }
 
 func (c CommentsService ) RemoveCommentById(id string) (*models.Comment,error){
@@ -79,6 +136,12 @@ func (c CommentsService ) RemoveCommentById(id string) (*models.Comment,error){
 	if err != nil{
         return nil,err
     }
+
+    _,err = c.PostsService.DeletePostCommentByPostId(comment.Post.Id.Hex(),comment.Id.Hex())
+    if err != nil {
+        return nil,err
+    }
+    
 	return comment,nil
 }
 

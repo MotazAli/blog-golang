@@ -17,10 +17,10 @@ type PostsRepository struct {
 }
 
 
-func (repository PostsRepository) FindAllPosts() ([]models.Post,error){
+func (repository PostsRepository) FindAllPosts() ([]models.PostLight,error){
 	var postCollection *mongo.Collection = configs.GetCollection(repository.DB,"posts")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-    var posts []models.Post = []models.Post{}
+    var posts []models.PostLight = []models.PostLight{}
     defer cancel()
 
     results, err := postCollection.Find(ctx, bson.M{})
@@ -38,10 +38,10 @@ func (repository PostsRepository) FindAllPosts() ([]models.Post,error){
 }
 
 
-func (repository PostsRepository) FindAllPostsPaging(page int, size int) ([]models.Post,error){
+func (repository PostsRepository) FindAllPostsPaging(page int, size int) ([]models.PostLight,error){
 	var postCollection *mongo.Collection = configs.GetCollection(repository.DB,"posts")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-    var posts []models.Post = []models.Post{}
+    var posts []models.PostLight = []models.PostLight{}
     defer cancel()
 
 	skip := int64(page)
@@ -100,7 +100,7 @@ func (repository PostsRepository) UpdatePost(id string, editPost *models.Post)(*
 	defer cancelFunc()
 
 	objId, _ := primitive.ObjectIDFromHex(id)
-	update := bson.M{"title": editPost.Title, "body": editPost.Body, "updated_at":editPost.UpdatedAt}
+	update := bson.M{"title": editPost.Title, "body": editPost.Body,"comments":editPost.Comments , "updated_at":editPost.UpdatedAt}
     _ , err1 := postCollection.UpdateOne(ctx, bson.M{"id": objId}, bson.M{"$set": update})
       
     if err1 != nil {
@@ -110,10 +110,6 @@ func (repository PostsRepository) UpdatePost(id string, editPost *models.Post)(*
 
 }
 func (repository PostsRepository) DeletePostById(id string) (int64,error){
-	// oldUser, err := repository.FindOneUserById(id)
-	// if err != nil{
-	// 	return nil,err
-	// }
 
 	var postCollection *mongo.Collection = configs.GetCollection(repository.DB,"posts")
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)

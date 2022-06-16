@@ -295,7 +295,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/models.Post"
+                                                "$ref": "#/definitions/models.PostLight"
                                             }
                                         }
                                     }
@@ -588,7 +588,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/models.User"
+                                                "$ref": "#/definitions/models.UserLight"
                                             }
                                         }
                                     }
@@ -611,7 +611,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "create user account",
+                "description": "create new user",
                 "consumes": [
                     "application/json"
                 ],
@@ -621,7 +621,7 @@ const docTemplate = `{
                 "tags": [
                     "users"
                 ],
-                "summary": "create user account",
+                "summary": "create new user",
                 "parameters": [
                     {
                         "description": "Add user",
@@ -847,7 +847,7 @@ const docTemplate = `{
             "required": [
                 "body",
                 "post_id",
-                "user_id"
+                "user"
             ],
             "properties": {
                 "body": {
@@ -860,13 +860,13 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "post_id": {
-                    "type": "string"
+                    "$ref": "#/definitions/models.PostLight"
                 },
                 "updated_at": {
                     "type": "string"
                 },
-                "user_id": {
-                    "type": "string"
+                "user": {
+                    "$ref": "#/definitions/models.UserLight"
                 }
             }
         },
@@ -889,6 +889,24 @@ const docTemplate = `{
                 }
             }
         },
+        "models.CommentLight": {
+            "type": "object",
+            "required": [
+                "body",
+                "user"
+            ],
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.UserLight"
+                }
+            }
+        },
         "models.CommentUpdateRequest": {
             "type": "object",
             "required": [
@@ -904,12 +922,17 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "body",
-                "title",
-                "user_id"
+                "title"
             ],
             "properties": {
                 "body": {
                     "type": "string"
+                },
+                "comments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.CommentLight"
+                    }
                 },
                 "created_at": {
                     "type": "string"
@@ -923,8 +946,8 @@ const docTemplate = `{
                 "updated_at": {
                     "type": "string"
                 },
-                "user_id": {
-                    "type": "string"
+                "user": {
+                    "$ref": "#/definitions/models.UserLight"
                 }
             }
         },
@@ -943,6 +966,57 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.PostLight": {
+            "type": "object",
+            "required": [
+                "body",
+                "title"
+            ],
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.UserLight"
+                }
+            }
+        },
+        "models.PostMinimal": {
+            "type": "object",
+            "required": [
+                "body",
+                "title"
+            ],
+            "properties": {
+                "body": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
                     "type": "string"
                 }
             }
@@ -983,6 +1057,36 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                },
+                "posts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.PostMinimal"
+                    }
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.UserLight": {
+            "type": "object",
+            "required": [
+                "email",
+                "name"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
                     "type": "string"
                 },
                 "updated_at": {

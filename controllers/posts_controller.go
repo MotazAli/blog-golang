@@ -62,14 +62,14 @@ func (controller PostsController) CreatePost() gin.HandlerFunc{
 // @Produce      json
 // @Param        page   query      int  false  "Page number"
 // @Param        size   query      int  false  "Number of object you want to return"
-// @Success      200  {object}  responses.Response{data=[]models.Post}
+// @Success      200  {object}  responses.Response{data=[]models.PostLight}
 // @Failure      400  {object}  responses.Response
 // @Failure      500  {object}  responses.Response 
 // @Router       /posts [get]
 func (controller PostsController) GetAllPosts() gin.HandlerFunc {
     return func(c *gin.Context){
 
-        var result []models.Post
+        var result []models.PostLight
         var err error
         size := c.Query("size") 
         page := c.Query("page")
@@ -110,6 +110,7 @@ func (controller PostsController) GetPostById() gin.HandlerFunc {
 
         postId := c.Param("id")
         result, err := controller.Service.GetPostById(postId)
+        //result, err := controller.Service.GetPostByIdDetails(postId)
         if err != nil {
             c.JSON(http.StatusInternalServerError, responses.Response{Status: http.StatusInternalServerError, Message: "error", Result: map[string]interface{}{"data": err.Error()}})
             return
@@ -180,12 +181,24 @@ func (controller PostsController) UpdatePostById() gin.HandlerFunc{
 	}
 }
 
-
+var postsService *services.PostsService = nil
+func GetPostsService(DB *mongo.Client) *services.PostsService{
+    if postsService == nil{
+        postsRepository := repositories.PostsRepository{DB:DB}
+        usersServiceObj := GetUsersService(DB)
+        postsService = &services.PostsService{Repository:postsRepository,UsersService:usersServiceObj}
+        
+    }
+    return postsService 
+}
 
 func CreatePostsController(DB *mongo.Client) *PostsController{
 
-    postsRepository := repositories.PostsRepository{DB:DB}
-    postsService := services.PostsService{Repository:postsRepository}
-    return &PostsController{Service:postsService} 
+    //postsRepository := repositories.PostsRepository{DB:DB}
+    //postsService := services.PostsService{Repository:postsRepository}
+    //usersServiceObj := GetUsersService(DB)
+    //postsService := services.PostsService{Repository:postsRepository,UsersService:usersServiceObj}
+    postsServiceObj := GetPostsService(DB)
+    return &PostsController{Service:postsServiceObj} 
 } 
 

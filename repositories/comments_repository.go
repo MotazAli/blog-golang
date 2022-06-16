@@ -110,11 +110,7 @@ func (repository CommentsRepository) UpdateComment(id string, editComment *model
 
 }
 func (repository CommentsRepository) DeleteCommentById(id string) (int64,error){
-	// oldUser, err := repository.FindOneUserById(id)
-	// if err != nil{
-	// 	return nil,err
-	// }
-
+	
 	var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunc()

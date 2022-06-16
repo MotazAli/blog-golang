@@ -1,10 +1,10 @@
 package services
 
 import (
-	
 	"blog/interfaces"
 	"blog/models"
-    "blog/utilities"
+	"blog/utilities"
+	"errors"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -16,16 +16,13 @@ type UsersService struct{
 }
 
 
-//var userCollection *mongo.Collection = configs.GetCollection(configs.DB,"users")
-//var validate = validator.New()
 
 
-
-func (u UsersService ) GetAllUsers()([]models.User,error){	
+func (u UsersService ) GetAllUsers()([]models.UserLight,error){	
         return u.Repository.FindAllUsers()
 }
 
-func (u UsersService ) GetAllUsersPaging(page int, size int) ([]models.User,error){
+func (u UsersService ) GetAllUsersPaging(page int, size int) ([]models.UserLight,error){
     if page <= 0 { page = 1}
     page = size * (page - 1)
     return u.Repository.FindAllUsersPaging(page,size)
@@ -77,30 +74,57 @@ func (u UsersService ) RemoveUserById(id string) (*models.User,error){
     return u.Repository.DeleteUserById(id)
 }
 
-// func GetAllUsers(c *gin.Context){
-// 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-//         var users []models.User = []models.User{}
-//         defer cancel()
 
-//         results, err := userCollection.Find(ctx, bson.M{})
+func (u UsersService ) CreateUserPostByUserId(id string,newPost *models.PostMinimal) (*models.User,error){
+    user, err := u.Repository.FindOneUserById(id)
+    if err != nil{
+        return nil,err
+    }
 
-//         if err != nil {
-//             c.JSON(http.StatusInternalServerError, responses.UserResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
-//             return
-//         }
-// 		defer results.Close(ctx)
-//         //reading from the db in an optimal way
-        
-//         for results.Next(ctx) {
-//             var singleUser models.User
-//             if err = results.Decode(&singleUser); err != nil {
-//                 c.JSON(http.StatusInternalServerError, responses.UserResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
-//             }
-          
-//             users = append(users, singleUser)
-//         }
+    user.Posts = append(user.Posts, *newPost)
+    return u.Repository.UpdateUser(id,user)
+}
+func (u UsersService ) EditUserPostByUserId(id string,editPost *models.PostMinimal) (*models.User,error){
+    user, err := u.Repository.FindOneUserById(id)
+    if err != nil{
+        return nil,err
+    }
 
-//         c.JSON(http.StatusOK,
-//             responses.UserResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": users}},
-//         )
-// }
+    if user.Posts == nil{
+        return nil,errors.New("No post with post id " + id )
+    }
+
+    for i := 0; i < len(user.Posts); i++ {
+        if user.Posts[i].Id.Hex() == editPost.Id.Hex(){
+            user.Posts[i].Body = editPost.Body
+            user.Posts[i].Title = editPost.Title
+            user.Posts[i].UpdatedAt = editPost.UpdatedAt
+            break
+        }
+    }
+
+    return u.Repository.UpdateUser(id,user)
+}
+func (u UsersService ) DeleteUserPostByUserId(id string,postId string) (*models.User,error){
+    user, err := u.Repository.FindOneUserById(id)
+    if err != nil{
+        return nil,err
+    }
+
+    if user.Posts == nil{
+        return nil,errors.New("No post with post id " + id)
+    }
+
+    for index , post := range user.Posts {
+        if post.Id.Hex() == postId{
+            user.Posts = removePostElementByIndex(user.Posts,index)
+            break
+        }
+    }
+
+    return u.Repository.UpdateUser(id,user)
+}
+
+func removePostElementByIndex(s []models.PostMinimal, index int) []models.PostMinimal {
+    return append(s[:index], s[index+1:]...)
+}

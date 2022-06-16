@@ -6,13 +6,20 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+
 type Comment struct {
 	Id        primitive.ObjectID `json:"id,omitempty"`
 	Body      string             `json:"body,omitempty" validate:"required"`
-	UserId    primitive.ObjectID `json:"user_id,omitempty" validate:"required"`
-	PostId    primitive.ObjectID `json:"post_id,omitempty" validate:"required"`
+	User      UserLight 		 `json:"user,omitempty" validate:"required"`
+	Post      PostLight 		 `json:"post_id,omitempty" validate:"required"`
 	CreatedAt time.Time          `json:"created_at"`
 	UpdatedAt time.Time          `json:"updated_at"`
+}
+
+type CommentLight struct {
+	Id        primitive.ObjectID `json:"id,omitempty"`
+	Body      string             `json:"body,omitempty" validate:"required"`
+	User      UserLight 		 `json:"user,omitempty" validate:"required"`
 }
 
 type CommentCreateRequest struct {
