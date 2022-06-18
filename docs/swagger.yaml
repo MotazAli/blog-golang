@@ -326,7 +326,7 @@ paths:
             $ref: '#/definitions/responses.Response'
       summary: Get comment info by id
       tags:
-      - comment
+      - comments
     put:
       consumes:
       - application/json

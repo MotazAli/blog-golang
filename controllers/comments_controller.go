@@ -97,7 +97,7 @@ func (controller CommentsController) GetAllComments() gin.HandlerFunc {
 // GetCommentById   godoc
 // @Summary      Get comment info by id
 // @Description  Get comment info by id
-// @Tags         comment
+// @Tags         comments
 // @Accept       json
 // @Produce      json
 // @Param        id   path      string  true  "Comment ID"

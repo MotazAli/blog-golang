@@ -154,7 +154,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "comment"
+                    "comments"
                 ],
                 "summary": "Get comment info by id",
                 "parameters": [
