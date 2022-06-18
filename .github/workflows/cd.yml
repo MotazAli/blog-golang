@@ -21,9 +21,6 @@ jobs:
     - name: Build
       run: go build -v ./...
 
-    - name: Generate swagger
-      run: swag init
-
     - name: Clean test cache
       run: go clean -testcache
 
