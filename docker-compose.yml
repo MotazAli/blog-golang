@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  mongo_db:
+    container_name: mongo_db_container
+    image: mongo:latest
+    ports:
+      - 27017:27017
+
+
+  
+  blog_golang_dev:
+    depends_on:
+      - mongo_db
+    container_name: blog_golang_dev_container
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: /docker-blog
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+
