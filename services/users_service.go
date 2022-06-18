@@ -117,7 +117,8 @@ func (u UsersService ) DeleteUserPostByUserId(id string,postId string) (*models.
 
     for index , post := range user.Posts {
         if post.Id.Hex() == postId{
-            user.Posts = removePostElementByIndex(user.Posts,index)
+            // user.Posts = removePostElementByIndex(user.Posts,index)
+            user.Posts = utilities.GRemoveElementByIndex(user.Posts,index)
             break
         }
     }
@@ -125,6 +126,6 @@ func (u UsersService ) DeleteUserPostByUserId(id string,postId string) (*models.
     return u.Repository.UpdateUser(id,user)
 }
 
-func removePostElementByIndex(s []models.PostMinimal, index int) []models.PostMinimal {
-    return append(s[:index], s[index+1:]...)
-}
+// func removePostElementByIndex(s []models.PostMinimal, index int) []models.PostMinimal {
+//     return append(s[:index], s[index+1:]...)
+// }

@@ -17,13 +17,23 @@ type UsersRepository struct {
 }
 
 
+var usersCollection *mongo.Collection = nil
+func (repository UsersRepository) getCollection() *mongo.Collection {
+	if usersCollection == nil{
+		usersCollection = configs.GetCollection(repository.DB,"users")
+	} 
+	return usersCollection
+}
+
+
 func (repository UsersRepository) FindAllUsers() ([]models.UserLight,error){
-	var userCollection *mongo.Collection = configs.GetCollection(repository.DB,"users")
+	// var userCollection *mongo.Collection = configs.GetCollection(repository.DB,"users")
+	collection := repository.getCollection() 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
         var users []models.UserLight = []models.UserLight{}
         defer cancel()
 
-        results, err := userCollection.Find(ctx, bson.M{})
+        results, err := collection.Find(ctx, bson.M{})
 
         if err != nil {
             return nil, err
@@ -41,7 +51,8 @@ func (repository UsersRepository) FindAllUsers() ([]models.UserLight,error){
 
 
 func (repository UsersRepository) FindAllUsersPaging(page int, size int) ([]models.UserLight,error){
-	var userCollection *mongo.Collection = configs.GetCollection(repository.DB,"users")
+	//var userCollection *mongo.Collection = configs.GetCollection(repository.DB,"users")
+	collection := repository.getCollection() 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
         var users []models.UserLight = []models.UserLight{}
         defer cancel()
@@ -52,7 +63,7 @@ func (repository UsersRepository) FindAllUsersPaging(page int, size int) ([]mode
 			Skip: &skip,
 			Limit: &limit,
 		  }
-        results, err := userCollection.Find(ctx, bson.M{},&opts)
+        results, err := collection.Find(ctx, bson.M{},&opts)
 
         if err != nil {
            return nil, err
@@ -71,13 +82,14 @@ func (repository UsersRepository) FindAllUsersPaging(page int, size int) ([]mode
 
 
 func (repository UsersRepository) FindOneUserById(id string) (*models.User,error){
-	var userCollection *mongo.Collection = configs.GetCollection(repository.DB,"users")
+	//var userCollection *mongo.Collection = configs.GetCollection(repository.DB,"users")
+	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunc()
 
 	objId, _ := primitive.ObjectIDFromHex(id)
 	var user models.User
-    err := userCollection.FindOne(ctx, bson.M{"id": objId}).Decode(&user)
+    err := collection.FindOne(ctx, bson.M{"id": objId}).Decode(&user)
     if err != nil {
         return nil,err
     }
@@ -86,15 +98,15 @@ func (repository UsersRepository) FindOneUserById(id string) (*models.User,error
 }
 
 func (repository UsersRepository)InsertUser(newUser *models.User) (*models.User,error){
-	var userCollection *mongo.Collection = configs.GetCollection(repository.DB,"users")
+	//var userCollection *mongo.Collection = configs.GetCollection(repository.DB,"users")
+	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
-	
 	defer cancelFunc()
 
 	
 
 
-	_, err := userCollection.InsertOne(ctx, newUser)
+	_, err := collection.InsertOne(ctx, newUser)
 	if err != nil {
 		return nil,err
 	}
@@ -104,14 +116,15 @@ func (repository UsersRepository)InsertUser(newUser *models.User) (*models.User,
 
 
 func (repository UsersRepository) UpdateUser(id string, editUser *models.User)(*models.User,error){
-	var userCollection *mongo.Collection = configs.GetCollection(repository.DB,"users")
+	//var userCollection *mongo.Collection = configs.GetCollection(repository.DB,"users")
+	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunc()
 
 	objId, _ := primitive.ObjectIDFromHex(id)
 
 	update := bson.M{"name": editUser.Name, "email": editUser.Email, "password": editUser.Password,"posts":editUser.Posts, "updated_at":editUser.UpdatedAt}
-    _ , err1 := userCollection.UpdateOne(ctx, bson.M{"id": objId}, bson.M{"$set": update})
+    _ , err1 := collection.UpdateOne(ctx, bson.M{"id": objId}, bson.M{"$set": update})
       
     if err1 != nil {
         return nil,err1
@@ -125,12 +138,13 @@ func (repository UsersRepository) DeleteUserById(id string) (*models.User,error)
 		return nil,err
 	}
 
-	var userCollection *mongo.Collection = configs.GetCollection(repository.DB,"users")
+	//var userCollection *mongo.Collection = configs.GetCollection(repository.DB,"users")
+	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunc()
 
 	objId, _ := primitive.ObjectIDFromHex(id)
-    _ , err1 := userCollection.DeleteOne(ctx, bson.M{"id": objId})
+    _ , err1 := collection.DeleteOne(ctx, bson.M{"id": objId})
 	if err1 != nil{
 		return nil,err1
 	}

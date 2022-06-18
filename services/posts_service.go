@@ -181,7 +181,8 @@ func (p PostsService ) DeletePostCommentByPostId(id string,commentId string) (*m
 
     for i := 0; i < len(post.Comments); i++ {
         if post.Comments[i].Id.Hex() == commentId{
-            post.Comments = removeCommentElementByIndex(post.Comments,i)
+            // post.Comments = removeCommentElementByIndex(post.Comments,i)
+            post.Comments = utilities.GRemoveElementByIndex(post.Comments,i)
             break
         }
     }
@@ -189,7 +190,11 @@ func (p PostsService ) DeletePostCommentByPostId(id string,commentId string) (*m
     return p.Repository.UpdatePost(id,post)
 }
 
-func removeCommentElementByIndex(s []models.CommentLight, index int) []models.CommentLight {
-    return append(s[:index], s[index+1:]...)
-}
+// func removeCommentElementByIndex(s []models.CommentLight, index int) []models.CommentLight {
+//     return append(s[:index], s[index+1:]...)
+// }
+
+// func GRemoveElementByIndex[E []E](s E, index int) E {
+//     return append(s[:index], s[index+1:]...)
+// }
 

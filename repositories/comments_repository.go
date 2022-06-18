@@ -16,14 +16,23 @@ type CommentsRepository struct {
 	DB *mongo.Client
 }
 
+var commentsCollection *mongo.Collection = nil
+func (repository CommentsRepository) getCollection() *mongo.Collection {
+	if commentsCollection == nil{
+		commentsCollection = configs.GetCollection(repository.DB,"comments")
+	} 
+	return commentsCollection
+}
+
 
 func (repository CommentsRepository) FindAllComments() ([]models.Comment,error){
-	var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
+	//var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
+	collection := repository.getCollection() 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     var comments []models.Comment = []models.Comment{}
     defer cancel()
 
-    results, err := commentCollection.Find(ctx, bson.M{})
+    results, err := collection.Find(ctx, bson.M{})
     if err != nil {
         return nil, err
     }
@@ -39,7 +48,8 @@ func (repository CommentsRepository) FindAllComments() ([]models.Comment,error){
 
 
 func (repository CommentsRepository) FindAllCommentsPaging(page int, size int) ([]models.Comment,error){
-	var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
+	//var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
+	collection := repository.getCollection() 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     var comments []models.Comment = []models.Comment{}
     defer cancel()
@@ -50,7 +60,7 @@ func (repository CommentsRepository) FindAllCommentsPaging(page int, size int) (
 		Skip: &skip,
 		Limit: &limit,
 	  }
-    results, err := commentCollection.Find(ctx, bson.M{},&opts)
+    results, err := collection.Find(ctx, bson.M{},&opts)
 
     if err != nil {
        return nil, err
@@ -66,13 +76,14 @@ func (repository CommentsRepository) FindAllCommentsPaging(page int, size int) (
 
 
 func (repository CommentsRepository) FindOneCommentById(id string) (*models.Comment,error){
-	var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
+	//var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
+	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunc()
 
 	objId, _ := primitive.ObjectIDFromHex(id)
 	var comment models.Comment
-    err := commentCollection.FindOne(ctx, bson.M{"id": objId}).Decode(&comment)
+    err := collection.FindOne(ctx, bson.M{"id": objId}).Decode(&comment)
     if err != nil {
         return nil,err
     }
@@ -81,11 +92,12 @@ func (repository CommentsRepository) FindOneCommentById(id string) (*models.Comm
 }
 
 func (repository CommentsRepository)InsertComment(newComment *models.Comment) (*models.Comment,error){
-	var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
+	//var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
+	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)	
 	defer cancelFunc()
 
-	_, err := commentCollection.InsertOne(ctx, newComment)
+	_, err := collection.InsertOne(ctx, newComment)
 	if err != nil {
 		return nil,err
 	}
@@ -95,13 +107,14 @@ func (repository CommentsRepository)InsertComment(newComment *models.Comment) (*
 
 
 func (repository CommentsRepository) UpdateComment(id string, editComment *models.Comment)(*models.Comment,error){
-	var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
+	//var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
+	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunc()
 
 	objId, _ := primitive.ObjectIDFromHex(id)
 	update := bson.M{"body": editComment.Body, "updated_at":editComment.UpdatedAt}
-    _ , err1 := commentCollection.UpdateOne(ctx, bson.M{"id": objId}, bson.M{"$set": update})
+    _ , err1 := collection.UpdateOne(ctx, bson.M{"id": objId}, bson.M{"$set": update})
       
     if err1 != nil {
         return nil,err1
@@ -111,12 +124,13 @@ func (repository CommentsRepository) UpdateComment(id string, editComment *model
 }
 func (repository CommentsRepository) DeleteCommentById(id string) (int64,error){
 	
-	var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
+	//var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
+	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunc()
 
 	objId, _ := primitive.ObjectIDFromHex(id)
-    result , err := commentCollection.DeleteOne(ctx, bson.M{"id": objId})
+    result , err := collection.DeleteOne(ctx, bson.M{"id": objId})
 	if err != nil{
 		return -1,err
 	}
