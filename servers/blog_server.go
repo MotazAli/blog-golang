@@ -4,21 +4,26 @@ import (
 	"blog/configs"
 	"blog/docs"
 	"blog/routers"
+	"os"
 
-	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"     // swagger embed files
 	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
 )
 
 func BlogServerRun(){
+	port := os.Getenv("PORT")
+	if port == "" {
+    	port = "8080" // Default port
+	}
 	docs.SwaggerInfo.Title = "Blog API"
 	docs.SwaggerInfo.Description = "This is a blog server with mongodb."
 	docs.SwaggerInfo.Version = "1.0"
-	//docs.SwaggerInfo.Host = "petstore.swagger.io"
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
-	docs.SwaggerInfo.Host = "localhost:8080"
+	//docs.SwaggerInfo.Host = "localhost:8080"
+	
 
 	router := gin.Default()
 	config := cors.DefaultConfig()
@@ -40,5 +45,5 @@ func BlogServerRun(){
 	}
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-	router.Run(":8080")
+	router.Run(":"+port)
 }
