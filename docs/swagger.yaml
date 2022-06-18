@@ -327,6 +327,45 @@ paths:
       summary: Get comment info by id
       tags:
       - comment
+    put:
+      consumes:
+      - application/json
+      description: Update comment by id
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update post
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/models.CommentUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Comment'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Response'
+      summary: Update comment by id
+      tags:
+      - comments
   /posts:
     get:
       consumes:

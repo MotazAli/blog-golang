@@ -21,7 +21,8 @@ func BlogServerRun(){
 	docs.SwaggerInfo.Description = "This is a blog server with mongodb."
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.BasePath = "/api/v1"
-	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+	docs.SwaggerInfo.Schemes = []string{"https"}
+	// docs.SwaggerInfo.Schemes = []string{"http", "https"}
 	//docs.SwaggerInfo.Host = "localhost:8080"
 	
 

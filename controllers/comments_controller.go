@@ -159,7 +159,7 @@ func (controller CommentsController) DeleteCommentById() gin.HandlerFunc{
 // @Success      200  {object}  responses.Response{data=models.Comment}
 // @Failure      400  {object}  responses.Response
 // @Failure      500  {object}  responses.Response
-// @Router       /posts/{id} [put]
+// @Router       /comments/{id} [put]
 func (controller CommentsController) UpdateCommentById() gin.HandlerFunc{
 	return func(c *gin.Context) {
         commentId := c.Param("id")
