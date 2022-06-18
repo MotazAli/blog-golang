@@ -26,7 +26,6 @@ func (repository PostsRepository) getCollection() *mongo.Collection {
 
 
 func (repository PostsRepository) FindAllPosts() ([]models.PostLight,error){
-	//var postCollection *mongo.Collection = configs.GetCollection(repository.DB,"posts")
 	collection := repository.getCollection() 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     var posts []models.PostLight = []models.PostLight{}
@@ -48,7 +47,6 @@ func (repository PostsRepository) FindAllPosts() ([]models.PostLight,error){
 
 
 func (repository PostsRepository) FindAllPostsPaging(page int, size int) ([]models.PostLight,error){
-	//var postCollection *mongo.Collection = configs.GetCollection(repository.DB,"posts")
 	collection := repository.getCollection() 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     var posts []models.PostLight = []models.PostLight{}
@@ -76,7 +74,6 @@ func (repository PostsRepository) FindAllPostsPaging(page int, size int) ([]mode
 
 
 func (repository PostsRepository) FindOnePostById(id string) (*models.Post,error){
-	//var postCollection *mongo.Collection = configs.GetCollection(repository.DB,"posts")
 	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunc()
@@ -92,7 +89,6 @@ func (repository PostsRepository) FindOnePostById(id string) (*models.Post,error
 }
 
 func (repository PostsRepository)InsertPost(newPost *models.Post) (*models.Post,error){
-	//var postCollection *mongo.Collection = configs.GetCollection(repository.DB,"posts")
 	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)	
 	defer cancelFunc()
@@ -107,7 +103,6 @@ func (repository PostsRepository)InsertPost(newPost *models.Post) (*models.Post,
 
 
 func (repository PostsRepository) UpdatePost(id string, editPost *models.Post)(*models.Post,error){
-	//var postCollection *mongo.Collection = configs.GetCollection(repository.DB,"posts")
 	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunc()
@@ -123,7 +118,6 @@ func (repository PostsRepository) UpdatePost(id string, editPost *models.Post)(*
 
 }
 func (repository PostsRepository) DeletePostById(id string) (int64,error){
-	//var postCollection *mongo.Collection = configs.GetCollection(repository.DB,"posts")
 	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunc()

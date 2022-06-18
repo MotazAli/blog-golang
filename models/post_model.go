@@ -45,3 +45,25 @@ type PostUpdateRequest struct {
 	Title  string `json:"title,omitempty" validate:"required"`
 	Body   string `json:"body,omitempty" validate:"required"`
 }
+
+
+
+//////////// for test only///////////////////
+type PostTest struct {
+	Id 	   	  string 			`json:"id,omitempty" validate:"required"`
+	Title  	  string 			`json:"title,omitempty" validate:"required"`
+	Body   	  string 			`json:"body,omitempty" validate:"required"`
+	User      UserTest 		 	`json:"user,omitempty"`
+	Comments  []CommentTest		`json:"comments"`
+	CreatedAt string          	`json:"created_at"`
+	UpdatedAt string          	`json:"updated_at"`
+}
+
+
+type PostMinimalTest struct {
+	Id        string `json:"id,omitempty"`
+	Title     string `json:"title,omitempty" validate:"required"`
+	Body      string `json:"body,omitempty" validate:"required"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
+}

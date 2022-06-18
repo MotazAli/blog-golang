@@ -27,7 +27,6 @@ func (repository UsersRepository) getCollection() *mongo.Collection {
 
 
 func (repository UsersRepository) FindAllUsers() ([]models.UserLight,error){
-	// var userCollection *mongo.Collection = configs.GetCollection(repository.DB,"users")
 	collection := repository.getCollection() 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
         var users []models.UserLight = []models.UserLight{}
@@ -51,7 +50,6 @@ func (repository UsersRepository) FindAllUsers() ([]models.UserLight,error){
 
 
 func (repository UsersRepository) FindAllUsersPaging(page int, size int) ([]models.UserLight,error){
-	//var userCollection *mongo.Collection = configs.GetCollection(repository.DB,"users")
 	collection := repository.getCollection() 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
         var users []models.UserLight = []models.UserLight{}
@@ -82,7 +80,6 @@ func (repository UsersRepository) FindAllUsersPaging(page int, size int) ([]mode
 
 
 func (repository UsersRepository) FindOneUserById(id string) (*models.User,error){
-	//var userCollection *mongo.Collection = configs.GetCollection(repository.DB,"users")
 	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunc()
@@ -98,7 +95,6 @@ func (repository UsersRepository) FindOneUserById(id string) (*models.User,error
 }
 
 func (repository UsersRepository)InsertUser(newUser *models.User) (*models.User,error){
-	//var userCollection *mongo.Collection = configs.GetCollection(repository.DB,"users")
 	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunc()
@@ -116,7 +112,6 @@ func (repository UsersRepository)InsertUser(newUser *models.User) (*models.User,
 
 
 func (repository UsersRepository) UpdateUser(id string, editUser *models.User)(*models.User,error){
-	//var userCollection *mongo.Collection = configs.GetCollection(repository.DB,"users")
 	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunc()
@@ -138,7 +133,6 @@ func (repository UsersRepository) DeleteUserById(id string) (*models.User,error)
 		return nil,err
 	}
 
-	//var userCollection *mongo.Collection = configs.GetCollection(repository.DB,"users")
 	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunc()

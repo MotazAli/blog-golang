@@ -26,7 +26,6 @@ func (repository CommentsRepository) getCollection() *mongo.Collection {
 
 
 func (repository CommentsRepository) FindAllComments() ([]models.Comment,error){
-	//var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
 	collection := repository.getCollection() 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     var comments []models.Comment = []models.Comment{}
@@ -48,7 +47,6 @@ func (repository CommentsRepository) FindAllComments() ([]models.Comment,error){
 
 
 func (repository CommentsRepository) FindAllCommentsPaging(page int, size int) ([]models.Comment,error){
-	//var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
 	collection := repository.getCollection() 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     var comments []models.Comment = []models.Comment{}
@@ -76,7 +74,6 @@ func (repository CommentsRepository) FindAllCommentsPaging(page int, size int) (
 
 
 func (repository CommentsRepository) FindOneCommentById(id string) (*models.Comment,error){
-	//var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
 	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunc()
@@ -92,7 +89,6 @@ func (repository CommentsRepository) FindOneCommentById(id string) (*models.Comm
 }
 
 func (repository CommentsRepository)InsertComment(newComment *models.Comment) (*models.Comment,error){
-	//var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
 	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)	
 	defer cancelFunc()
@@ -107,7 +103,6 @@ func (repository CommentsRepository)InsertComment(newComment *models.Comment) (*
 
 
 func (repository CommentsRepository) UpdateComment(id string, editComment *models.Comment)(*models.Comment,error){
-	//var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
 	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunc()
@@ -123,8 +118,6 @@ func (repository CommentsRepository) UpdateComment(id string, editComment *model
 
 }
 func (repository CommentsRepository) DeleteCommentById(id string) (int64,error){
-	
-	//var commentCollection *mongo.Collection = configs.GetCollection(repository.DB,"comments")
 	collection := repository.getCollection() 
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunc()

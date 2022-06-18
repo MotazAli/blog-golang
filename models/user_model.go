@@ -24,13 +24,13 @@ type UserLight struct {
 	UpdatedAt 	time.Time 			`json:"updated_at"`
 }
 
-
+////////// for testing only ////////////////
 type UserTest struct {
 	Id 			string 				`json:"id,omitempty"`
 	Name 		string 				`json:"name,omitempty" validate:"required"`
 	Email 		string  			`json:"email,omitempty" validate:"required"`
 	Password 	string  			`json:"password,omitempty" validate:"required"`
-	Posts 		[]PostMinimal		`json:"posts"`
+	Posts 		[]PostMinimalTest	`json:"posts"`
 	CreatedAt 	string 				`json:"created_at"`
 	UpdatedAt 	string 				`json:"updated_at"`
 }

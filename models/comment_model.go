@@ -31,3 +31,13 @@ type CommentCreateRequest struct {
 type CommentUpdateRequest struct {
 	Body    string `json:"body,omitempty" validate:"required"`
 }
+
+////////// for testing only ////////////////
+type CommentTest struct {
+	Id        string   		  `json:"id,omitempty"`
+	Body      string   		  `json:"body,omitempty" validate:"required"`
+	User      UserTest 		  `json:"user,omitempty" validate:"required"`
+	Post	  PostMinimalTest `json:"post,omitempty" validate:"required"`
+	CreatedAt string   		  `json:"created_at"`
+	UpdatedAt string  		  `json:"updated_at"`
+}
